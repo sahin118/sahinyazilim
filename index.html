@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şahin Yazılım | Profesyonel Yazılım ve Otomasyon Çözümleri</title>
+    <style>
+        /* Modern Dark Mode Temeli */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth; /* Menüye basınca sayfayı yağ gibi kaydırır kanka */
+        }
+        body {
+            background-color: #0b0b0d;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* --- ÜST SABİT MENÜ (NAVBAR) --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(11, 11, 13, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1a1a22;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+        }
+        .logo span {
+            color: #00bcff;
+        }
+        nav a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 25px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        nav a:hover, nav a.active {
+            color: #00bcff;
+        }
+
+        /* --- GENEL KONTEYNER --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- SAYFA YÖNETİMİ (GİZLE / GÖSTER) --- */
+        .page {
+            display: none; /* Sayfalar varsayılan olarak gizli, JS ile açacağız */
+            padding-top: 140px;
+            padding-bottom: 80px;
+        }
+        .page.active {
+            display: block; /* Sadece aktif olan sayfa görünecek */
+        }
+
+        /* ==========================================
+           SAYFA 1: ANA SAYFA (HİZMETLER & VİZYON)
+           ========================================== */
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        .hero-title span {
+            background: linear-gradient(45deg, #00bcff, #0077ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-desc {
+            font-size: 1.25rem;
+            color: #838396;
+            max-width: 700px;
+            margin: 0 auto 35px auto;
+        }
+
+        /* Hizmet Alanları / Neler Yapıyoruz? */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            text-align: center;
+            padding-top: 20px; /* Kaydırma sonrası menünün altında kalmasın diye kanka */
+        }
+        .section-title span {
+            color: #00bcff;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 80px;
+        }
+        .service-card {
+            background-color: #121216;
+            border: 1px solid #1e1e24;
+            padding: 30px;
+            border-radius: 12px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: #00bcff;
+        }
+        .service-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        .service-card p {
+            color: #888899;
+            font-size: 0.95rem;
+        }
+
+        /* Geliştirdiğimiz Programlar Listesi */
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        @media (max-width: 600px) {
+            .program-grid { grid-template-columns: 1fr; }
+        }
+        .program-card {
+            background-color: #121216;
+            border: 1px solid #1e1e24;
+            border-radius: 12px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .badge {
+            align-self: flex-start;
+            background-color: rgba(0, 188, 255, 0.1);
+            color: #00bcff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+        .program-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        .program-card p {
+            color: #888899;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+        .view-details-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(45deg, #00bcff, #0077ff);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        .view-details-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ==========================================
+           SAYFA 2: PROGRAM DETAY SAYFASI (ESNAF PANELİ)
+           ========================================== */
+        .detail-wrapper {
+            background-color: #121216;
+            border: 1px solid #1e1e24;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .back-btn {
+            display: inline-block;
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            color: #00bcff;
+        }
+        .detail-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .detail-body p {
+            color: #b3b3c6;
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+        }
+        .feature-list {
+            list-style: none;
+            margin-bottom: 35px;
+            background-color: #17171f;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+        .feature-list li {
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            color: #e1e1e8;
+        }
+        .feature-list li::before {
+            content: "🔹";
+            margin-right: 12px;
+        }
+        .download-now-btn {
+            display: block;
+            text-align: center;
+            background-color: #24a0ed;
+            color: white;
+            text-decoration: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .download-now-btn:hover {
+            background-color: #1a85cb;
+        }
+        .file-info {
+            display: block;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555566;
+            margin-top: 10px;
+        }
+
+        /* --- ALT KISIM (FOOTER) --- */
+        footer {
+            margin-top: 100px;
+            padding: 30px 20px;
+            border-top: 1px solid #1a1a22;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555566;
+        }
+        footer a {
+            color: #00bcff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Üst Menü -->
+    <header>
+        <div class="logo" onclick="showPage('anasayfa')">ŞAHİN<span>YAZILIM</span></div>
+        <nav>
+            <a id="nav-anasayfa" onclick="showPage('anasayfa')" class="active">Anasayfa</a>
+            <a id="nav-programlar" onclick="scrollToKutuphane()">Programlarımız</a>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!-- ==========================================
+             SAYFA 1: ANA SAYFA GÖRÜNÜMÜ
+             ========================================== -->
+        <section id="page-anasayfa" class="page active">
+            
+            <!-- Hero Başlık -->
+            <div class="hero">
+                <h1 class="hero-title">Fikirlerinizi <span>Güçlü Yazılımlara</span> Dönüştürüyoruz</h1>
+                <p class="hero-desc">Sadece tek bir sektöre değil; modern web projelerinden gelişmiş masaüstü otomasyonlarına, özel API entegrasyonlarından veri analiz botlarına kadar geniş bir yelpazede profesyonel çözümler üretiyorum.</p>
+            </div>
+
+            <!-- Genel Yetenekler / Hizmetler -->
+            <h2 class="section-title">Neler <span>Yapıyoruz?</span></h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>Özel Masaüstü Yazılımları</h3>
+                    <p>İşletmenizdeki rutin işleri otomatize eden, donmayan ve bilgisayarı yormayan yüksek performanslı native masaüstü programları geliştiriyorum.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <h3>Modern Web Geliştirme</h3>
+                    <p>Hızlı, SEO uyumlu, mobil esnekliğe sahip ve modern kullanıcı deneyimini ön planda tutan kurumsal web siteleri ve e-ticaret sistemleri kuruyorum.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🤖</div>
+                    <h3>Akıllı Bot & Otomasyon</h3>
+                    <p>Telegram, Discord veya web tabanlı platformlar için API entegrasyonlu, veri çeken ve toplu işlemler yürüten özel bot çözümleri üretiyorum.</p>
+                </div>
+            </div>
+
+            <!-- Yazılım Kütüphanesi -->
+            <h2 class="section-title" id="kutuphane">Yazılım Kütüphanemiz</h2>
+            <div class="program-grid">
+                
+                <!-- Telegram Bot Kartı -->
+                <div class="program-card">
+                    <div>
+                        <div class="badge">Masaüstü Otomasyonu</div>
+                        <h3>Telegram Toplu Mesaj Programı</h3>
+                        <p>Duyurularınızı ve reklam metinlerinizi hedef gruplara belirlediğiniz süre aralıklarıyla tamamen otomatik ve stabil şekilde gönderen esnaf dostu panel.</p>
+                    </div>
+                    <div class="view-details-btn" onclick="showPage('telegram-detay')">Detayları Gör ve İndir</div>
+                </div>
+
+                <!-- Diğer İşler İçin Örnek Boş Kart -->
+                <div class="program-card" style="opacity: 0.5;">
+                    <div>
+                        <div class="badge" style="background-color: #222; color: #555;">Ar-Ge</div>
+                        <h3>Çok Yakında</h3>
+                        <p>İhtiyaçlara yönelik geliştirilen yeni nesil otomasyon ve veri yönetim yazılımları çok yakında burada listelenecektir.</p>
+                    </div>
+                    <div class="view-details-btn" style="background: #222; color: #555; cursor: not-allowed;">Geliştirilme Aşamasında</div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             SAYFA 2: TELEGRAM BOT DETAY SAYFASI
+             ========================================= -->
+        <section id="page-telegram-detay" class="page">
+            <div class="detail-wrapper">
+                <div class="back-btn" onclick="showPage('anasayfa')">← Ana Sayfaya Dön</div>
+                
+                <div class="detail-header">
+                    <h2>Telegram Toplu Mesaj Yazılımı</h2>
+                    <p style="color:#00bcff; font-weight:600; margin-bottom: 20px;">Sürüm v1.0 | Esnaf ve İşletme Özel Paketi</p>
+                </div>
+
+                <div class="detail-body">
+                    <p>Bu program, işletmelerimizin ve esnaflarımızın dijital reklam süreçlerini kolaylaştırmak adına özel olarak sıfırdan inşa edilmiştir. Arka planda Telethon altyapısını kullanan bu güçlü motor, bilgisayarınızda donma veya kasma yapmadan, belirlediğiniz gruplara jilet gibi reklam gönderimi sağlar.</p>
+                    
+                    <h3 style="margin-bottom: 15px;">🚀 Öne Çıkan Teknik Özellikler:</h3>
+                    <ul class="feature-list">
+                        <li><strong>Esnaf Dostu Kolay Arayüz:</strong> Karmaşık kod veya konsol ekranları olmadan tamamen grafiksel ve Türkçe yönetim paneli.</li>
+                        <li><strong>Genişletilmiş Reklam Metni Alanı:</strong> Kampanya metinlerinizi, linklerinizi kayma ve bozulma olmadan rahatça yazabileceğiniz geniş kutu düzeni.</li>
+                        <li><strong>Dinamik Zamanlama (Dakika Ayarı):</strong> Gönderim sıklığını tamamen siz belirlersiniz. Sistem her döngü sonrası güvenle beklemeye geçer.</li>
+                        <li><strong>Anti-Ban ve Stabil Çalışma:</strong> İşlemleri arka planda thread mimarisiyle yürüttüğü için arayüz kilitlenmez ve Telegram kurallarına tam uyum sağlar.</li>
+                    </ul>
+
+                    <a href="#" class="download-now-btn">Programı Güvenle İndir (.exe)</a>
+                    <span class="file-info">Desteklenen Sistemler: Windows 10 / 11 | Güvenli ve Temiz Kod</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Alt Kısım -->
+    <footer>
+        © 2026 Şahin Yazılım. Tüm hakları sablıdır. | Genel Proje ve İletişim Hattı: <a href="https://t.me/sahinyazilim" target="_blank">Telegram Destek</a>
+    </footer>
+
+    <!-- --- JAVASCRIPT GÜNCELLEMELERİ --- -->
+    <script>
+        // Sayfa ilk yüklendiğinde kesinlikle en üstten başlasın kanka
+        window.onload = function() {
+            window.scrollTo(0, 0);
+        };
+
+        function showPage(pageId) {
+            // Önce tüm sayfaları gizle
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Tüm menü linklerinin aktifliğini kaldır
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // İstenen sayfayı aç
+            document.getElementById('page-' + pageId).classList.add('active');
+
+            // Eğer anasayfaya döndüyse menüdeki rengi yak
+            if(pageId === 'anasayfa') {
+                document.getElementById('nav-anasayfa').classList.add('active');
+            }
+
+            // Sayfa değişiminde tepeye fırlat
+            window.scrollTo(0, 0);
+        }
+
+        // Programlarımız menüsüne basınca yağ gibi aşağı kaydıran sihirli kod
+        function scrollToKutuphane() {
+            // Önce anasayfayı aktif et (Eğer detay sayfasındaysa geri dönsün)
+            showPage('anasayfa');
+            
+            // Küçük bir gecikmeyle jilet gibi kütüphane hizasına kaydır
+            setTimeout(() => {
+                const element = document.getElementById('kutuphane');
+                if (element) {
+                    const headerOffset = 100; // Menünün arkasında kalmasın diye pay bırakıyoruz
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
+        }
+    </script>
+
+</body>
+</html>
